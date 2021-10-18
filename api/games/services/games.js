@@ -1,6 +1,7 @@
 'use strict';
 const axios = require("axios");
 const slugify = require("slugify")
+const qs = require("querystring")
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-services)
@@ -26,7 +27,7 @@ async function getGameInfo(slug){
       description: description.innerHTML
     }
   } catch (error) {
-    console.log("getGameInfo", Exception(error))
+    console.log("getGameInfo", error)
   }
 }
 
@@ -45,7 +46,7 @@ async function create(name, entityName){
       })
     }
   } catch (error) {
-    console.log("create", Exception(error));
+    console.log("create", error);
   }
 }
 
@@ -107,7 +108,7 @@ async function setImage({image, game, field = "cover"}){
       }
     })
   } catch (error) {
-    console.log("setImage", Exception(error))
+    console.log("setImage", error)
   }
 }
 
@@ -155,20 +156,20 @@ async function createGames(products) {
       })
     )
   } catch (error) {
-    console.log("createGames", Exception(error))
+    console.log("createGames", error)
   }
 }
 
 module.exports = {
   populate: async (params) => {
     try {
-      const gogApiUrl = `https://www.gog.com/games/ajax/filtered?mediaType=game&page=1&sort=popularity`;
+      const gogApiUrl = `https://www.gog.com/games/ajax/filtered?mediaType=game&${qs.stringify(params)}`;
       const {data: {products}} = await axios.get(gogApiUrl)
 
       await createManyToManyData(products)
       await createGames(products)
     } catch (error) {
-      console.log("populate", Exception(error))
+      console.log("populate", error)
     }
   }
 };

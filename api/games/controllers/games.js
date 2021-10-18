@@ -9,7 +9,13 @@ module.exports = {
   populate: async (ctx) =>{
     console.log("starting populate");
 
-    await strapi.services.games.populate()
+    const options = {
+      sort:"popularity",
+      page:"1",
+      ...ctx
+    }
+
+    await strapi.services.games.populate(options)
 
     ctx.send({ok: true});
   }
