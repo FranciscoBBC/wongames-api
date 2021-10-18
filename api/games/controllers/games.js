@@ -5,4 +5,12 @@
  * to customize this controller
  */
 
-module.exports = {};
+module.exports = {
+  populate: async (ctx) =>{
+    console.log("starting populate");
+
+    await strapi.services.games.populate()
+
+    ctx.send({ok: true});
+  }
+};
